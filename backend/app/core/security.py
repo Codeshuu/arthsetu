@@ -1,38 +1,85 @@
-from datetime import datetime, timedelta
-from typing import Optional, Any, Dict
+import bcrypt
 import jwt
-from passlib.context import CryptContext
+from datetime import datetime, timedelta, timezone
+from typing import Any, Dict, Optional, Union
 from app.core.config import settings
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+def hash_password(password: str) -> str:
+    """
+    Securely hash a plaintext password using bcrypt with salt rounds = 12.
+    Validates input length against bcrypt's 72-byte limit.
+    Never logs or persists plaintext passwords.
+    """
+    if not password:
+        raise ValueError("Password cannot be empty")
+
+    password_bytes = password.encode("utf-8")
+    if len(password_bytes) > 72:
+        raise ValueError("Password cannot exceed 72 bytes")
+
+    salt = bcrypt.gensalt(rounds=12)
+    hashed_bytes = bcrypt.hashpw(password_bytes, salt)
+    return hashed_bytes.decode("utf-8")
+
+
+# Alias for compatibility with Phase 3 services
+get_password_hash = hash_password
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    """Verifies a plain text password against a bcrypt hash."""
-    return pwd_context.verify(plain_password, hashed_password)
+    """
+    Verify a plaintext password against a stored bcrypt hash.
+    Safely handles malformed hashes and lengths exceeding 72 bytes.
+    """
+    if not plain_password or not hashed_password:
+        return False
+
+    try:
+        plain_bytes = plain_password.encode("utf-8")
+        if len(plain_bytes) > 72:
+            return False
+
+        hashed_bytes = hashed_password.encode("utf-8")
+        return bcrypt.checkpw(plain_bytes, hashed_bytes)
+    except Exception:
+        # Avoid leaking hash errors or format mismatches
+        return False
 
 
-def get_password_hash(password: str) -> str:
-    """Generates a bcrypt hash for a plain text password."""
-    return pwd_context.hash(password)
-
-
-def create_access_token(subject: str, expires_delta: Optional[timedelta] = None) -> str:
-    """Creates a signed JWT access token for user id."""
+def create_access_token(
+    subject: Union[str, Any], expires_delta: Optional[timedelta] = None
+) -> str:
+    """
+    Generate a signed JWT access token containing the user's UUID in the 'sub' claim.
+    """
+    now = datetime.now(timezone.utc)
     if expires_delta:
-        expire = datetime.utcnow() + expires_delta
+        expire = now + expires_delta
     else:
-        expire = datetime.utcnow() + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+        expire = now + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
 
-    to_encode: Dict[str, Any] = {"sub": str(subject), "exp": expire}
-    encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
+    payload = {
+        "sub": str(subject),
+        "iat": now,
+        "exp": expire,
+    }
+
+    encoded_jwt = jwt.encode(
+        payload,
+        settings.SECRET_KEY,
+        algorithm=settings.ALGORITHM,
+    )
     return encoded_jwt
 
 
-def decode_access_token(token: str) -> Optional[Dict[str, Any]]:
-    """Decodes and validates a JWT access token."""
-    try:
-        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
-        return payload
-    except jwt.PyJWTError:
-        return None
+def decode_access_token(token: str) -> Dict[str, Any]:
+    """
+    Decode and validate a signed JWT access token.
+    Raises jwt.PyJWTError (ExpiredSignatureError, InvalidTokenError) if invalid.
+    """
+    return jwt.decode(
+        token,
+        settings.SECRET_KEY,
+        algorithms=[settings.ALGORITHM],
+    )

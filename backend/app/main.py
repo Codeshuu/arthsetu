@@ -10,9 +10,16 @@ app = FastAPI(
     redoc_url=f"{settings.API_V1_STR}/redoc",
 )
 
+# CORS Configuration
+allow_origins = (
+    [str(origin) for origin in settings.BACKEND_CORS_ORIGINS]
+    if settings.BACKEND_CORS_ORIGINS
+    else ["*"]
+)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.BACKEND_CORS_ORIGINS if settings.BACKEND_CORS_ORIGINS else ["*"],
+    allow_origins=allow_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -27,5 +34,5 @@ def root():
         "project": settings.PROJECT_NAME,
         "version": "1.0.0",
         "status": "online",
-        "api_documentation": f"{settings.API_V1_STR}/docs"
+        "api_documentation": f"{settings.API_V1_STR}/docs",
     }

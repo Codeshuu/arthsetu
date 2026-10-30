@@ -26,8 +26,8 @@ class Settings(BaseSettings):
     DATABASE_URL: str = "postgresql://postgres:postgres@localhost:5432/arthsetu"
     TEST_DATABASE_URL: str = "sqlite:///./test_arthsetu.db"
 
-    # CORS
-    BACKEND_CORS_ORIGINS: List[str] = [
+    # CORS Configuration
+    BACKEND_CORS_ORIGINS: Union[List[str], str] = [
         "http://localhost:5173",
         "http://localhost:3000",
         "http://127.0.0.1:5173",
@@ -37,7 +37,7 @@ class Settings(BaseSettings):
     STORAGE_DIR: str = "./storage"
     UPLOAD_MAX_FILE_SIZE_MB: int = 15
 
-    @field_validator("BACKEND_CORS_ORIGINS", mode="before")
+    @field_validator("BACKEND_CORS_ORIGINS", mode="after")
     @classmethod
     def assemble_cors_origins(cls, v: Union[str, List[str]]) -> List[str]:
         if isinstance(v, str):
