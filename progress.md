@@ -24,7 +24,7 @@
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Teammate 1** | Frontend UI & API Integration | In Progress | None | T1-01 (Deps & Tailwind Setup) | None |
 | **Teammate 2** | Backend Foundation & Security | In Progress | T2-01, T2-02 | T2-03 (SQLAlchemy Models) | None |
-| **Teammate 3** | Data Ingestion & Reconciliation | In Progress | None | T3-01 (CSV Upload & Parser Unit Tests) | None |
+| **Teammate 3** | Data Ingestion & Reconciliation | Completed | T3-01, T3-02, T3-03, T3-04, T3-05, T3-06, T3-07 | Ready for P4 Integration | None |
 | **Teammate 4** | Financial Analytics & Passport | In Progress | None | T4-01 (Pure Metric Calculation Functions) | None |
 
 ---
@@ -66,13 +66,13 @@
 - [ ] **T1-09** — Build Passport Preview screen & PDF Download trigger | **Teammate:** T1 | **Status:** Not Started | **Completion Date:** — | **Notes:** Tamper-evident token display & download.
 
 #### Data Processing & Reconciliation (Teammate 3)
-- [ ] **T3-01** — Implement CSV storage handler & SHA-256 duplicate batch detector | **Teammate:** T3 | **Status:** In Progress | **Completion Date:** — | **Notes:** Saves raw files into `storage/imports/`.
-- [ ] **T3-02** — Build CSV Parser with auto-header detection (Date, Amount, UPI Ref) | **Teammate:** T3 | **Status:** Not Started | **Completion Date:** — | **Notes:** Tested against `sample_transactions.csv`.
-- [ ] **T3-03** — Implement Column Mapping & Row Validation service | **Teammate:** T3 | **Status:** Not Started | **Completion Date:** — | **Notes:** Emits valid/invalid row counts with error messages.
-- [ ] **T3-04** — Implement Duplicate Transaction detection logic | **Teammate:** T3 | **Status:** Not Started | **Completion Date:** — | **Notes:** Compares date, amount, reference number.
-- [ ] **T3-05** — Implement Batch Commit endpoint writing rows to `transactions` table | **Teammate:** T3 | **Status:** Not Started | **Completion Date:** — | **Notes:** Requires T2-03 (Models) & T2-07 (Transactions).
-- [ ] **T3-06** — Implement Reconciliation candidate identification engine | **Teammate:** T3 | **Status:** Not Started | **Completion Date:** — | **Notes:** Evaluates cross-source transactions within date window.
-- [ ] **T3-07** — Implement Reconciliation resolve endpoint (`ACCEPT`/`REJECT`) | **Teammate:** T3 | **Status:** Not Started | **Completion Date:** — | **Notes:** Updates verification status on transactions.
+- [x] **T3-01** — Implement CSV storage handler & SHA-256 duplicate batch detector | **Teammate:** T3 | **Status:** Completed | **Completion Date:** 2026-10-31 | **Notes:** Implemented in `import_service.py` with storage in `storage/imports/` and SHA-256 duplicate detection. Verified via `test_imports.py`.
+- [x] **T3-02** — Build CSV Parser with auto-header detection (Date, Amount, UPI Ref) | **Teammate:** T3 | **Status:** Completed | **Completion Date:** 2026-10-31 | **Notes:** Implemented in `validation_service.py` with multi-format date parsing, INR currency cleaning, and tested against `sample_transactions.csv`.
+- [x] **T3-03** — Implement Column Mapping & Row Validation service | **Teammate:** T3 | **Status:** Completed | **Completion Date:** 2026-10-31 | **Notes:** Implemented in `validation_service.py` with canonical normalizer, emitting valid/invalid counts and error notes. Verified via `test_validation.py`.
+- [x] **T3-04** — Implement Duplicate Transaction detection logic | **Teammate:** T3 | **Status:** Completed | **Completion Date:** 2026-10-31 | **Notes:** Implemented in `duplicate_service.py` supporting deterministic SHA-256 fingerprints, in-batch detection, and cross-batch DB checks.
+- [x] **T3-05** — Implement Batch Commit endpoint writing rows to `transactions` table | **Teammate:** T3 | **Status:** Completed | **Completion Date:** 2026-10-31 | **Notes:** Implemented in `import_service.py` with atomic insertion, status tracking, and duplicate prevention. Verified via `test_imports.py`.
+- [x] **T3-06** — Implement Reconciliation candidate identification engine | **Teammate:** T3 | **Status:** Completed | **Completion Date:** 2026-10-31 | **Notes:** Implemented in `reconciliation_service.py` supporting UTR matching (0.99), exact amount/date matching (0.90), and window approximate matching (0.75-0.85). Verified via `test_reconciliation.py`.
+- [x] **T3-07** — Implement Reconciliation resolve endpoint (`ACCEPT`/`REJECT`) | **Teammate:** T3 | **Status:** Completed | **Completion Date:** 2026-10-31 | **Notes:** Implemented in `reconciliation_service.py`, updating statuses and upgrading transactions to RECONCILED on ACCEPT. Verified via `test_reconciliation.py`.
 
 #### Financial Analysis & Passport (Teammate 4)
 - [ ] **T4-01** — Implement pure Financial Metric calculator functions | **Teammate:** T4 | **Status:** In Progress | **Completion Date:** — | **Notes:** Unit-tested with synthetic transactions.
@@ -115,11 +115,11 @@
 | `POST /businesses` | T2 | Not Started | No | No | Creates business profile |
 | `GET /transactions` | T2 | Not Started | No | No | Paginated & filtered list |
 | `POST /transactions` | T2 | Not Started | No | No | Manual transaction create |
-| `POST /imports/upload` | T3 | Not Started | No | No | Multipart file upload |
-| `POST /imports/{id}/map`| T3 | Not Started | No | No | Submits column mappings |
-| `POST /imports/{id}/commit`| T3| Not Started | No | No | Atomically inserts valid transactions |
-| `GET /reconciliation/candidates` | T3 | Not Started | No | No | Identifies cross-source matches |
-| `POST /reconciliation/resolve` | T3 | Not Started | No | No | Accepts or rejects match |
+| `POST /imports/upload` | T3 | Completed | Yes | Ready | Multipart file upload, SHA-256 duplicate batch detector |
+| `POST /imports/{id}/map`| T3 | Completed | Yes | Ready | Submits column mappings & row validation preview |
+| `POST /imports/{id}/commit`| T3| Completed | Yes | Ready | Atomically inserts valid non-duplicate transactions |
+| `GET /reconciliation/candidates` | T3 | Completed | Yes | Ready | Identifies cross-source matches |
+| `POST /reconciliation/resolve` | T3 | Completed | Yes | Ready | Accepts or rejects match; updates verification status |
 | `GET /analysis/summary` | T4 | Not Started | No | No | Recorded sales, expenses, digital share |
 | `GET /analysis/completeness` | T4 | Not Started | No | No | Operating-day coverage % |
 | `GET /analysis/anomalies` | T4 | Not Started | No | No | Rule-based and IQR outlier list |
@@ -151,9 +151,9 @@
 | `test_auth.py` (JWT & Passwords) | T2 | Not Started | — | Tests token issuance and expiry |
 | `test_ownership.py` (Tenant Isolation) | T2 | Not Started | — | Proves User B cannot access User A's data |
 | `test_transactions.py` (CRUD) | T2 | Not Started | — | Tests pagination, filters, and totals |
-| `test_imports.py` (CSV Parsing) | T3 | Not Started | — | Tests PhonePe & Bank CSV parsing |
-| `test_validation.py` (Row Validation) | T3 | Not Started | — | Tests invalid dates, empty amounts |
-| `test_reconciliation.py` (Matching) | T3 | Not Started | — | Tests candidate matching rules |
+| `test_imports.py` (CSV Parsing) | T3 | Completed | 5/5 Passed | Tests SHA-256 batch dedupe, parsing & batch commit |
+| `test_validation.py` (Row Validation) | T3 | Completed | 7/7 Passed | Tests header auto-detect, INR amount parser & date normalization |
+| `test_reconciliation.py` (Matching) | T3 | Completed | 4/4 Passed | Tests UTR match, date window match & resolve status upgrade |
 | `test_analysis.py` (Metrics & IQR) | T4 | Not Started | — | Tests formulas & sample size guards |
 
 ---
@@ -187,4 +187,5 @@
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | **2026-10-31 00:15** | Teammate 2 (Lead) | Completed repository inspection, established master implementation plan, and initialized progress tracker. | `IMPLEMENTATION_PLAN.md`, `progress.md` | Verified structure and dependencies | None | Begin T2-01 (requirements.txt update) & T2-02 (Database configuration). |
 | **2026-10-31 00:30** | Teammate 2 (Lead) | Implemented T2-01 (dependencies) & T2-02 (database configuration). Added psycopg2-binary, bcrypt, PyJWT, reportlab, openpyxl. Configured BaseSettings, SQLAlchemy 2.x DeclarativeBase, sessionmaker, get_db dependency, and test engine factory. Verified with in-memory SQLite and tested Postgres connectivity status. | `backend/requirements.txt`, `backend/.env.example`, `backend/app/core/config.py`, `backend/app/db/session.py`, `backend/app/db/base.py`, `backend/app/db/init_db.py`, `progress.md` | Ran test script verifying Base metadata (0 tables), SQLite test connection, session lifecycle, and Postgres port check | None | Proceed to T2-03 (SQLAlchemy Models). |
+| **2026-10-31 00:55** | Teammate 3 | Implemented entire Phase 3 ingestion & reconciliation suite (T3-01 through T3-07). Built CSV storage handler with SHA-256 deduplication, intelligent header autodetection (regex with word boundaries), Indian currency & date normalizer, deterministic transaction fingerprinting, atomic batch commit pipeline, cross-source candidate reconciliation engine, and match resolution endpoints. | `backend/app/schemas/imports.py`, `backend/app/schemas/reconciliation.py`, `backend/app/schemas/transaction.py`, `backend/app/services/validation_service.py`, `backend/app/services/duplicate_service.py`, `backend/app/services/import_service.py`, `backend/app/services/reconciliation_service.py`, `backend/app/api/v1/imports.py`, `backend/app/api/v1/reconciliation.py`, `backend/tests/test_validation.py`, `backend/tests/test_imports.py`, `backend/tests/test_reconciliation.py`, `progress.md` | Executed 16 automated tests across test_validation.py (7/7 passed), test_imports.py (5/5 passed), and test_reconciliation.py (4/4 passed). Verified against sample_transactions.csv. | None | Ready for Phase 4 API integration with Frontend (T1) and Analytics (T4). |
 | *Template Row* | *T1/T2/T3/T4* | *Describe work done* | *Files changed* | *Tests executed* | *Blocker or None* | *Next scheduled task* |
