@@ -1,0 +1,5 @@
+id,date,description,amount,type,category,account_id,counterparty
+TXN001,2026-01-05,Client Payment Invoice #1024,45000.00,CREDIT,Revenue,ACC_01,Alpha Enterprises
+TXN002,2026-01-08,Office Rent January,15000.00,DEBIT,Rent,ACC_01,Metro Properties
+TXN003,2026-01-12,Cloud Hosting Services,3200.00,DEBIT,Infrastructure,ACC_02,AWS Cloud
+TXN004,2026-01-20,Consulting Fee,28000.00,CREDIT,Revenue,ACC_01,Beta Corp

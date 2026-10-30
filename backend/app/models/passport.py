@@ -1,0 +1,1 @@
+# Financial passport model definition
