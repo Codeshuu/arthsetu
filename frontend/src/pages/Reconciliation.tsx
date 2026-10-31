@@ -1,7 +1,8 @@
-import React from "react";
+import React from 'react';
+import { ReviewQueuePage } from '../features/records/ReviewQueuePage';
 
 export const Reconciliation: React.FC = () => {
-  return <div>Reconciliation Page</div>;
+  return <ReviewQueuePage />;
 };
 
 export default Reconciliation;

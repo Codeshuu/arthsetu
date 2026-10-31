@@ -1,0 +1,36 @@
+/* Typography Styles for ArthSetu (Fonts loaded via Google Fonts CDN in index.html) */
+
+/* Tabular figures for ledger accuracy */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+.font-kalam {
+  font-family: 'Kalam', cursive;
+}
+
+.font-display {
+  font-family: 'Fraunces', 'Noto Sans Devanagari', 'Noto Sans Kannada', 'Noto Sans Tamil', serif;
+}
+
+.font-sans {
+  font-family: 'Manrope', 'Noto Sans Devanagari', 'Noto Sans Kannada', 'Noto Sans Tamil', sans-serif;
+}
+
+.font-mono {
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+/* Script-specific adjustments */
+[lang='kn'] .font-display,
+[lang='ta'] .font-display {
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1.35;
+}
+
+[lang='kn'] body,
+[lang='ta'] body {
+  font-size: 105%;
+  line-height: 1.6;
+}

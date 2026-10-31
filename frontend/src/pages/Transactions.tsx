@@ -1,7 +1,8 @@
-import React from "react";
+import React from 'react';
+import { RecordsPage } from '../features/records/RecordsPage';
 
 export const Transactions: React.FC = () => {
-  return <div>Transactions Page</div>;
+  return <RecordsPage />;
 };
 
 export default Transactions;

@@ -1,0 +1,289 @@
+import React, { lazy, Suspense } from 'react';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
+import { OwnerShell } from './layouts/OwnerShell';
+import { InstitutionShell } from './layouts/InstitutionShell';
+import { PublicShell } from './layouts/PublicShell';
+
+// Lazy loaded routes
+const LandingPage = lazy(() =>
+  import('../features/landing/LandingPage').then((m) => ({ default: m.LandingPage }))
+);
+const LoginPage = lazy(() =>
+  import('../features/auth/LoginPage').then((m) => ({ default: m.LoginPage }))
+);
+const OnboardingWizard = lazy(() =>
+  import('../features/onboarding/OnboardingWizard').then((m) => ({ default: m.OnboardingWizard }))
+);
+const DashboardPage = lazy(() =>
+  import('../features/dashboard/DashboardPage').then((m) => ({ default: m.DashboardPage }))
+);
+const DiaryPage = lazy(() =>
+  import('../features/diary/DiaryPage').then((m) => ({ default: m.DiaryPage }))
+);
+const UdhaarLedgerPage = lazy(() =>
+  import('../features/diary/UdhaarLedgerPage').then((m) => ({ default: m.UdhaarLedgerPage }))
+);
+const RecordsPage = lazy(() =>
+  import('../features/records/RecordsPage').then((m) => ({ default: m.RecordsPage }))
+);
+const ReviewQueuePage = lazy(() =>
+  import('../features/records/ReviewQueuePage').then((m) => ({ default: m.ReviewQueuePage }))
+);
+const ImportWizardPage = lazy(() =>
+  import('../features/records/import/ImportWizardPage').then((m) => ({
+    default: m.ImportWizardPage,
+  }))
+);
+const AnalyticsPage = lazy(() =>
+  import('../features/analytics/AnalyticsPage').then((m) => ({ default: m.AnalyticsPage }))
+);
+const EvidenceCentrePage = lazy(() =>
+  import('../features/evidence/EvidenceCentrePage').then((m) => ({
+    default: m.EvidenceCentrePage,
+  }))
+);
+const PassportPage = lazy(() =>
+  import('../features/passport/PassportPage').then((m) => ({ default: m.PassportPage }))
+);
+const SharePassportPage = lazy(() =>
+  import('../features/passport/SharePassportPage').then((m) => ({ default: m.SharePassportPage }))
+);
+const AssistantPage = lazy(() =>
+  import('../features/assistant/AssistantPage').then((m) => ({ default: m.AssistantPage }))
+);
+const ProfilePage = lazy(() =>
+  import('../features/profile/ProfilePage').then((m) => ({ default: m.ProfilePage }))
+);
+const InstitutionViewPage = lazy(() =>
+  import('../features/institution/InstitutionViewPage').then((m) => ({
+    default: m.InstitutionViewPage,
+  }))
+);
+const CreditsPage = lazy(() =>
+  import('../features/credits/CreditsPage').then((m) => ({ default: m.CreditsPage }))
+);
+const NotFoundPage = lazy(() =>
+  import('../features/credits/NotFoundPage').then((m) => ({ default: m.NotFoundPage }))
+);
+
+// Fallback skeleton loader
+const PageLoadingFallback = () => (
+  <div className="min-h-screen bg-[#F1E8D0] flex flex-col items-center justify-center space-y-3 font-mono text-xs text-[#8A6446]">
+    <div className="w-8 h-8 rounded-full border-2 border-[#14402F] border-t-transparent animate-spin" />
+    <div>Opening ledger page...</div>
+  </div>
+);
+
+export const router = createBrowserRouter([
+  // Top-level aliases for direct navigation
+  {
+    path: '/dashboard',
+    element: <Navigate to="/app" replace />,
+  },
+  {
+    path: '/transactions',
+    element: <Navigate to="/app/records" replace />,
+  },
+  {
+    path: '/import',
+    element: <Navigate to="/app/records/import" replace />,
+  },
+  {
+    path: '/reconciliation',
+    element: <Navigate to="/app/records/review" replace />,
+  },
+  {
+    path: '/insights',
+    element: <Navigate to="/app/analytics" replace />,
+  },
+  {
+    path: '/passport',
+    element: <Navigate to="/app/passport" replace />,
+  },
+  {
+    path: '/settings',
+    element: <Navigate to="/app/profile" replace />,
+  },
+
+  // Public routes
+  {
+    path: '/',
+    element: <PublicShell />,
+    children: [
+      {
+        index: true,
+        element: (
+          <Suspense fallback={<PageLoadingFallback />}>
+            <LandingPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'login',
+        element: (
+          <Suspense fallback={<PageLoadingFallback />}>
+            <LoginPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'register',
+        element: (
+          <Suspense fallback={<PageLoadingFallback />}>
+            <LoginPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'onboarding',
+        element: (
+          <Suspense fallback={<PageLoadingFallback />}>
+            <OnboardingWizard />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'credits',
+        element: (
+          <Suspense fallback={<PageLoadingFallback />}>
+            <CreditsPage />
+          </Suspense>
+        ),
+      },
+    ],
+  },
+
+  // Owner App routes (/app/*)
+  {
+    path: '/app',
+    element: <OwnerShell />,
+    children: [
+      {
+        index: true,
+        element: (
+          <Suspense fallback={<PageLoadingFallback />}>
+            <DashboardPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'diary',
+        element: (
+          <Suspense fallback={<PageLoadingFallback />}>
+            <DiaryPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'diary/udhaar',
+        element: (
+          <Suspense fallback={<PageLoadingFallback />}>
+            <UdhaarLedgerPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'records',
+        element: (
+          <Suspense fallback={<PageLoadingFallback />}>
+            <RecordsPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'records/review',
+        element: (
+          <Suspense fallback={<PageLoadingFallback />}>
+            <ReviewQueuePage />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'records/import',
+        element: (
+          <Suspense fallback={<PageLoadingFallback />}>
+            <ImportWizardPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'analytics',
+        element: (
+          <Suspense fallback={<PageLoadingFallback />}>
+            <AnalyticsPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'evidence',
+        element: (
+          <Suspense fallback={<PageLoadingFallback />}>
+            <EvidenceCentrePage />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'passport',
+        element: (
+          <Suspense fallback={<PageLoadingFallback />}>
+            <PassportPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'passport/share',
+        element: (
+          <Suspense fallback={<PageLoadingFallback />}>
+            <SharePassportPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'ask',
+        element: (
+          <Suspense fallback={<PageLoadingFallback />}>
+            <AssistantPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'profile',
+        element: (
+          <Suspense fallback={<PageLoadingFallback />}>
+            <ProfilePage />
+          </Suspense>
+        ),
+      },
+    ],
+  },
+
+  // Institutional Shared View routes (/institution/*)
+  {
+    path: '/institution',
+    element: <InstitutionShell />,
+    children: [
+      {
+        path: ':token',
+        element: (
+          <Suspense fallback={<PageLoadingFallback />}>
+            <InstitutionViewPage />
+          </Suspense>
+        ),
+      },
+      {
+        index: true,
+        element: <Navigate to="/institution/demo" replace />,
+      },
+    ],
+  },
+
+  // 404
+  {
+    path: '*',
+    element: (
+      <Suspense fallback={<PageLoadingFallback />}>
+        <NotFoundPage />
+      </Suspense>
+    ),
+  },
+]);

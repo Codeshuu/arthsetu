@@ -1,7 +1,8 @@
-import React from "react";
+import React from 'react';
+import { ProfilePage } from '../features/profile/ProfilePage';
 
 export const Settings: React.FC = () => {
-  return <div>Settings Page</div>;
+  return <ProfilePage />;
 };
 
 export default Settings;

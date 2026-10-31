@@ -1,7 +1,8 @@
-import React from "react";
+import React from 'react';
+import { ImportWizardPage } from '../features/records/import/ImportWizardPage';
 
 export const ImportData: React.FC = () => {
-  return <div>Import Data Page</div>;
+  return <ImportWizardPage />;
 };
 
 export default ImportData;

@@ -1,7 +1,8 @@
-import React from "react";
+import React from 'react';
+import { LoginPage } from '../features/auth/LoginPage';
 
 export const Register: React.FC = () => {
-  return <div>Register Page</div>;
+  return <LoginPage />;
 };
 
 export default Register;

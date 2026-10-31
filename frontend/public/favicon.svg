@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+  <rect width="48" height="48" rx="8" fill="#14402F" />
+  <!-- Ruled baseline ledger lines -->
+  <line x1="8" y1="36" x2="40" y2="36" stroke="#D6CAA8" stroke-width="2" stroke-dasharray="2 2" opacity="0.6"/>
+  <!-- Arch bridge rising from ledger lines -->
+  <path d="M 10 34 C 14 18, 20 14, 24 14 C 28 14, 34 18, 38 34" stroke="#F8F1DE" stroke-width="3" stroke-linecap="round"/>
+  <path d="M 13 34 C 16 22, 21 19, 24 19 C 27 19, 32 22, 35 34" stroke="#D08A1E" stroke-width="2" stroke-linecap="round"/>
+  <!-- Central golden keystone/sun -->
+  <circle cx="24" cy="14" r="2.5" fill="#D08A1E" />
+</svg>
+

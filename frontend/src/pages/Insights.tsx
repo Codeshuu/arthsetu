@@ -1,7 +1,8 @@
-import React from "react";
+import React from 'react';
+import { AnalyticsPage } from '../features/analytics/AnalyticsPage';
 
 export const Insights: React.FC = () => {
-  return <div>Insights Page</div>;
+  return <AnalyticsPage />;
 };
 
 export default Insights;

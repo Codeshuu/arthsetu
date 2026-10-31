@@ -10,28 +10,39 @@ logger = logging.getLogger(__name__)
 def build_engine(database_url: str) -> Engine:
     """
     Factory function to build a SQLAlchemy 2.x engine with dialect-specific configurations.
-    Supports PostgreSQL connection pooling and isolated SQLite for local tests.
+    Supports PostgreSQL connection pooling and fallback to SQLite if PostgreSQL is unreachable.
     """
     connect_args: Dict[str, Any] = {}
     engine_kwargs: Dict[str, Any] = {}
 
     if database_url.startswith("sqlite"):
-        # SQLite requirement for multi-threaded testing
         connect_args["check_same_thread"] = False
+        return create_engine(database_url, connect_args=connect_args)
     else:
-        # PostgreSQL production-grade pooling and connection health verification
-        engine_kwargs["pool_pre_ping"] = True
-        engine_kwargs["pool_size"] = 10
-        engine_kwargs["max_overflow"] = 20
+        try:
+            eng = create_engine(
+                database_url,
+                connect_args=connect_args,
+                pool_pre_ping=True,
+                pool_size=10,
+                max_overflow=20,
+            )
+            # Test connection immediately
+            with eng.connect() as conn:
+                pass
+            return eng
+        except Exception as exc:
+            logger.warning(
+                f"Could not connect to database at {database_url} ({exc}). "
+                "Falling back to local SQLite database (sqlite:///./arthsetu.db)."
+            )
+            return create_engine(
+                "sqlite:///./arthsetu.db",
+                connect_args={"check_same_thread": False},
+            )
 
-    return create_engine(
-        database_url,
-        connect_args=connect_args,
-        **engine_kwargs
-    )
 
-
-# Primary application engine configured from settings
+# Primary application engine configured from settings with auto-fallback
 engine = build_engine(settings.DATABASE_URL)
 
 # Primary sessionmaker factory for application requests
