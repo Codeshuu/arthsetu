@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Split, Check, ExternalLink, ShieldCheck } from 'lucide-react';
+import { X, Split, Check, ExternalLink } from 'lucide-react';
 import { Transaction, TransactionCategory } from '../../services/types';
 import { useArthSetuStore } from '../../store/useArthSetuStore';
+import { useI18n } from '../../i18n/i18nContext';
 import { formatINR } from '../../lib/formatCurrency';
 import { EvidenceChip } from '../../components/evidence/EvidenceChip';
 
@@ -12,35 +13,31 @@ interface TransactionDrawerProps {
   onOpenTrace: (t: Transaction) => void;
 }
 
-const CATEGORY_OPTIONS: { id: TransactionCategory; label: string }[] = [
-  { id: 'business_income', label: 'Business Income (बिक्री आवक)' },
-  { id: 'inventory_purchase', label: 'Inventory / Wholesale Stock (माल खरीद)' },
-  { id: 'operating_expense', label: 'Operating Expense (दुकान खर्च)' },
-  { id: 'supplier_payment', label: 'Supplier Payment (सप्लायर भुगतान)' },
-  { id: 'personal_transfer', label: 'Personal Transfer (व्यक्तिगत खर्च)' },
-  { id: 'refund', label: 'Customer Refund (रिफंड)' },
-  { id: 'unclassified', label: 'Unclassified (अवर्गीकृत)' },
-];
-
 export const TransactionDrawer: React.FC<TransactionDrawerProps> = ({
   transaction,
   onClose,
   onOpenTrace,
 }) => {
+  const { t } = useI18n();
   const classifyTransaction = useArthSetuStore((s) => s.classifyTransaction);
   const splitTransaction = useArthSetuStore((s) => s.splitTransaction);
 
-  const [selectedCategory, setSelectedCategory] = useState<TransactionCategory>(
-    transaction?.category || 'unclassified'
-  );
   const [splitMode, setSplitMode] = useState(false);
   const [splitBizAmount, setSplitBizAmount] = useState<string>('');
   const [splitPersonalAmount, setSplitPersonalAmount] = useState<string>('');
 
   if (!transaction) return null;
 
+  const categoryOptions: { id: TransactionCategory; label: string }[] = [
+    { id: 'business_income', label: t('records.catIncome', 'Business Income') },
+    { id: 'inventory_purchase', label: t('records.catInventory', 'Inventory / Wholesale Stock') },
+    { id: 'operating_expense', label: t('records.catExpense', 'Operating Expense') },
+    { id: 'supplier_payment', label: t('records.catSupplier', 'Supplier Payment') },
+    { id: 'personal_transfer', label: t('records.catPersonal', 'Personal Transfer') },
+    { id: 'unclassified', label: t('records.catUnclassified', 'Unclassified') },
+  ];
+
   const handleApplyClassification = (cat: TransactionCategory) => {
-    setSelectedCategory(cat);
     classifyTransaction(transaction.id, cat, true);
   };
 
@@ -70,7 +67,7 @@ export const TransactionDrawer: React.FC<TransactionDrawerProps> = ({
           animate={{ opacity: 0.4 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="fixed inset-0 bg-[#2B2620]"
+          className="fixed inset-0 bg-[#241A14]"
         />
 
         {/* Drawer */}
@@ -79,19 +76,19 @@ export const TransactionDrawer: React.FC<TransactionDrawerProps> = ({
           animate={{ x: 0 }}
           exit={{ x: '100%' }}
           transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          className="relative w-full max-w-md bg-[#FDFBF4] border-l border-[#D6CAA8] shadow-2xl h-full flex flex-col justify-between z-10 select-none font-sans"
+          className="relative w-full max-w-md bg-[#FDFBF4] border-l border-[#D8BDA0] shadow-2xl h-full flex flex-col justify-between z-10 select-none font-sans"
         >
           {/* Header */}
-          <div className="bg-[#14402F] text-[#FDFBF4] p-4 flex justify-between items-center">
+          <div className="bg-[#A64D3D] text-[#F4E6CE] p-4 flex justify-between items-center">
             <div>
-              <span className="text-[10px] font-mono text-[#D08A1E] uppercase font-bold">
+              <span className="text-[10px] font-mono text-[#E8A04B] uppercase font-bold">
                 Transaction Detail
               </span>
-              <h3 className="font-display font-bold text-lg">
+              <h3 className="font-display font-bold text-lg text-white">
                 {transaction.description}
               </h3>
             </div>
-            <button onClick={onClose} className="p-1 rounded text-[#FDFBF4]/80 hover:text-white">
+            <button onClick={onClose} className="p-1 rounded text-[#F4E6CE]/80 hover:text-white">
               <X className="w-5 h-5" />
             </button>
           </div>
@@ -99,11 +96,11 @@ export const TransactionDrawer: React.FC<TransactionDrawerProps> = ({
           {/* Body */}
           <div className="p-5 flex-1 overflow-y-auto space-y-5 bg-khata-page">
             {/* Amount Banner */}
-            <div className="p-4 rounded bg-[#F8F1DE] border border-[#D6CAA8] text-center">
-              <div className="text-xs font-mono text-[#7C766B]">Transaction Amount</div>
+            <div className="p-4 rounded-xl bg-[#F4E6CE] border border-[#D8BDA0] text-center">
+              <div className="text-xs font-mono text-[#76513B]">Transaction Amount</div>
               <div
                 className={`font-display text-3xl font-bold my-1 ${
-                  transaction.direction === 'in' ? 'text-[#14402F]' : 'text-[#B5532F]'
+                  transaction.direction === 'in' ? 'text-[#B94F35]' : 'text-[#76513B]'
                 }`}
               >
                 {transaction.direction === 'in' ? '+' : '-'}
@@ -115,34 +112,34 @@ export const TransactionDrawer: React.FC<TransactionDrawerProps> = ({
             </div>
 
             {/* Core Metadata */}
-            <div className="bg-[#FDFBF4] p-3.5 rounded border border-[#D6CAA8] text-xs space-y-2 font-mono">
-              <div className="flex justify-between border-b border-[#D6CAA8]/50 pb-1">
-                <span className="text-[#7C766B]">Date:</span>
-                <span className="text-[#2B2620] font-bold">{transaction.date}</span>
+            <div className="bg-[#FDFBF4] p-3.5 rounded-xl border border-[#D8BDA0] text-xs space-y-2 font-mono">
+              <div className="flex justify-between border-b border-[#D8BDA0]/50 pb-1">
+                <span className="text-[#76513B]">Date:</span>
+                <span className="text-[#39332E] font-bold">{transaction.date}</span>
               </div>
-              <div className="flex justify-between border-b border-[#D6CAA8]/50 pb-1">
-                <span className="text-[#7C766B]">Payment Channel:</span>
-                <span className="uppercase text-[#14402F] font-bold">{transaction.channel}</span>
+              <div className="flex justify-between border-b border-[#D8BDA0]/50 pb-1">
+                <span className="text-[#76513B]">Payment Channel:</span>
+                <span className="uppercase text-[#A64D3D] font-bold">{transaction.channel}</span>
               </div>
-              <div className="flex justify-between border-b border-[#D6CAA8]/50 pb-1">
-                <span className="text-[#7C766B]">Account Tag:</span>
-                <span className="uppercase text-[#8A6446]">{transaction.account}</span>
+              <div className="flex justify-between border-b border-[#D8BDA0]/50 pb-1">
+                <span className="text-[#76513B]">Account Tag:</span>
+                <span className="uppercase text-[#76513B]">{transaction.account}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-[#7C766B]">Status:</span>
-                <span className="text-[#2A6347] font-bold">
-                  {transaction.classification.confirmed ? 'Confirmed by You' : 'Suggested (Needs Confirm)'}
+                <span className="text-[#76513B]">Status:</span>
+                <span className="text-[#B94F35] font-bold">
+                  {transaction.classification.confirmed ? 'Confirmed' : 'Suggested (Needs Confirm)'}
                 </span>
               </div>
             </div>
 
             {/* Classification Suggestion Reason */}
             {transaction.classification.reason && (
-              <div className="p-3 rounded bg-[#E4EAD6]/50 border border-[#939F5B]/50 text-xs">
-                <div className="text-[10px] font-mono font-bold uppercase text-[#2A6347]">
-                  ArthSetu Suggestion Note
+              <div className="p-3 rounded-lg bg-[#F4E6CE]/70 border border-[#D8BDA0] text-xs">
+                <div className="text-[10px] font-mono font-bold uppercase text-[#B94F35]">
+                  Classification Suggestion
                 </div>
-                <div className="text-[#14402F] mt-0.5 font-sans">
+                <div className="text-[#39332E] mt-0.5 font-sans">
                   "{transaction.classification.reason}"
                 </div>
               </div>
@@ -152,7 +149,7 @@ export const TransactionDrawer: React.FC<TransactionDrawerProps> = ({
             {!splitMode ? (
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
-                  <label className="text-xs font-bold text-[#2B2620] font-mono">
+                  <label className="text-xs font-bold text-[#39332E] font-mono">
                     CLASSIFY THIS RECORD:
                   </label>
                   <button
@@ -161,7 +158,7 @@ export const TransactionDrawer: React.FC<TransactionDrawerProps> = ({
                       setSplitBizAmount((transaction.amount * 0.7).toFixed(0));
                       setSplitPersonalAmount((transaction.amount * 0.3).toFixed(0));
                     }}
-                    className="text-xs text-[#7A5A16] font-bold flex items-center space-x-1 hover:underline font-mono"
+                    className="text-xs text-[#B94F35] font-bold flex items-center space-x-1 hover:underline font-mono"
                   >
                     <Split className="w-3.5 h-3.5" />
                     <span>Split (Mixed Record)</span>
@@ -169,53 +166,53 @@ export const TransactionDrawer: React.FC<TransactionDrawerProps> = ({
                 </div>
 
                 <div className="grid grid-cols-1 gap-1.5">
-                  {CATEGORY_OPTIONS.map((opt) => (
+                  {categoryOptions.map((opt) => (
                     <button
                       key={opt.id}
                       type="button"
                       onClick={() => handleApplyClassification(opt.id)}
-                      className={`px-3 py-2 rounded text-left text-xs font-medium border flex items-center justify-between transition-all ${
+                      className={`px-3 py-2 rounded-lg text-left text-xs font-medium border flex items-center justify-between transition-all ${
                         transaction.category === opt.id
-                          ? 'bg-[#14402F] text-[#FDFBF4] border-[#0F2E22] font-bold'
-                          : 'bg-[#F8F1DE] text-[#2B2620] border-[#D6CAA8] hover:bg-[#E6DAB9]'
+                          ? 'bg-[#B94F35] text-white border-[#A64D3D] font-bold'
+                          : 'bg-[#F4E6CE] text-[#39332E] border-[#D8BDA0] hover:bg-[#E8D6A3]'
                       }`}
                     >
                       <span>{opt.label}</span>
-                      {transaction.category === opt.id && <Check className="w-4 h-4 text-[#D08A1E]" />}
+                      {transaction.category === opt.id && <Check className="w-4 h-4 text-[#E8A04B]" />}
                     </button>
                   ))}
                 </div>
               </div>
             ) : (
               /* Split Form */
-              <form onSubmit={handleApplySplit} className="p-3 bg-[#F8F1DE] rounded border border-[#D6CAA8] space-y-3 text-xs">
-                <div className="font-bold text-[#14402F] flex justify-between items-center">
+              <form onSubmit={handleApplySplit} className="p-3 bg-[#F4E6CE] rounded-lg border border-[#D8BDA0] space-y-3 text-xs">
+                <div className="font-bold text-[#A64D3D] flex justify-between items-center">
                   <span>Split Mixed Amount</span>
-                  <button type="button" onClick={() => setSplitMode(false)} className="text-[11px] text-[#7C766B]">
+                  <button type="button" onClick={() => setSplitMode(false)} className="text-[11px] text-[#76513B]">
                     Cancel
                   </button>
                 </div>
                 <div>
-                  <label className="block text-[11px] text-[#2B2620] mb-1">Business Portion (₹)</label>
+                  <label className="block text-[11px] text-[#39332E] mb-1">Business Portion (₹)</label>
                   <input
                     type="number"
                     value={splitBizAmount}
                     onChange={(e) => setSplitBizAmount(e.target.value)}
-                    className="w-full px-2.5 py-1.5 rounded bg-white border border-[#D6CAA8] font-mono"
+                    className="w-full px-2.5 py-1.5 rounded bg-white border border-[#D8BDA0] font-mono"
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] text-[#2B2620] mb-1">Personal Portion (₹)</label>
+                  <label className="block text-[11px] text-[#39332E] mb-1">Personal Portion (₹)</label>
                   <input
                     type="number"
                     value={splitPersonalAmount}
                     onChange={(e) => setSplitPersonalAmount(e.target.value)}
-                    className="w-full px-2.5 py-1.5 rounded bg-white border border-[#D6CAA8] font-mono"
+                    className="w-full px-2.5 py-1.5 rounded bg-white border border-[#D8BDA0] font-mono"
                   />
                 </div>
                 <button
                   type="submit"
-                  className="w-full py-2 rounded bg-[#14402F] text-white font-bold text-xs"
+                  className="w-full py-2 rounded bg-[#B94F35] text-white font-bold text-xs"
                 >
                   Save Split Transactions
                 </button>
@@ -227,16 +224,16 @@ export const TransactionDrawer: React.FC<TransactionDrawerProps> = ({
               <button
                 type="button"
                 onClick={() => onOpenTrace(transaction)}
-                className="w-full py-2.5 rounded bg-[#F8F1DE] border border-[#D6CAA8] text-xs font-bold text-[#14402F] hover:bg-[#E6DAB9] flex items-center justify-center space-x-1.5 transition-colors font-mono"
+                className="w-full py-2.5 rounded-lg bg-[#F4E6CE] border border-[#D8BDA0] text-xs font-bold text-[#A64D3D] hover:bg-[#E8D6A3] flex items-center justify-center space-x-1.5 transition-colors font-mono"
               >
                 <span>View Full Evidence Bridge</span>
-                <ExternalLink className="w-3.5 h-3.5 text-[#D08A1E]" />
+                <ExternalLink className="w-3.5 h-3.5 text-[#B94F35]" />
               </button>
             </div>
           </div>
 
           {/* Footer */}
-          <div className="p-3 bg-[#F8F1DE] border-t border-[#D6CAA8] text-center text-[11px] font-mono text-[#7C766B]">
+          <div className="p-3 bg-[#F4E6CE]/80 border-t border-[#D8BDA0] text-center text-[11px] font-mono text-[#76513B]">
             All changes update the 4 Dimensions & Evidence Ribbon instantly
           </div>
         </motion.div>
@@ -244,4 +241,3 @@ export const TransactionDrawer: React.FC<TransactionDrawerProps> = ({
     </AnimatePresence>
   );
 };
-

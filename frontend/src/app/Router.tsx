@@ -10,6 +10,9 @@ const LandingPage = lazy(() =>
 const LoginPage = lazy(() =>
   import('../features/auth/LoginPage').then((m) => ({ default: m.LoginPage }))
 );
+const RegisterPage = lazy(() =>
+  import('../features/auth/RegisterPage').then((m) => ({ default: m.RegisterPage }))
+);
 const OnboardingWizard = lazy(() =>
   import('../features/onboarding/OnboardingWizard').then((m) => ({ default: m.OnboardingWizard }))
 );
@@ -44,15 +47,20 @@ const SharePassportPage = lazy(() =>
 const ProfilePage = lazy(() =>
   import('../features/profile/ProfilePage').then((m) => ({ default: m.ProfilePage }))
 );
+const InstitutionViewPage = lazy(() =>
+  import('../features/institution/InstitutionViewPage').then((m) => ({
+    default: m.InstitutionViewPage,
+  }))
+);
 const NotFoundPage = lazy(() =>
   import('../features/credits/NotFoundPage').then((m) => ({ default: m.NotFoundPage }))
 );
 
 // Fallback skeleton loader
 const PageLoadingFallback = () => (
-  <div className="min-h-screen bg-[#F1E8D0] flex flex-col items-center justify-center space-y-3 font-mono text-xs text-[#8A6446]">
-    <div className="w-8 h-8 rounded-full border-2 border-[#14402F] border-t-transparent animate-spin" />
-    <div>Opening ledger page...</div>
+  <div className="min-h-screen bg-[#F4E6CE] flex flex-col items-center justify-center space-y-3 font-mono text-xs text-[#76513B]">
+    <div className="w-8 h-8 rounded-full border-2 border-[#B94F35] border-t-transparent animate-spin" />
+    <div>Opening ledger...</div>
   </div>
 );
 
@@ -112,7 +120,7 @@ export const router = createBrowserRouter([
         path: 'register',
         element: (
           <Suspense fallback={<PageLoadingFallback />}>
-            <LoginPage />
+            <RegisterPage />
           </Suspense>
         ),
       },
@@ -124,7 +132,21 @@ export const router = createBrowserRouter([
           </Suspense>
         ),
       },
-      ],
+    ],
+  },
+
+  // Institutional Read-Only View Routes
+  {
+    path: '/institution/:token',
+    element: (
+      <Suspense fallback={<PageLoadingFallback />}>
+        <InstitutionViewPage />
+      </Suspense>
+    ),
+  },
+  {
+    path: '/institution',
+    element: <Navigate to="/institution/demo" replace />,
   },
 
   // Owner App routes (/app/*)
@@ -207,9 +229,7 @@ export const router = createBrowserRouter([
     ],
   },
 
-
-
-  // 404
+  // 404 Catch-All
   {
     path: '*',
     element: (

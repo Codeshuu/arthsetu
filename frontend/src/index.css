@@ -7,22 +7,22 @@
 
 @layer base {
   :root {
-    --color-paper-200: #F1E8D0;
-    --color-forest-800: #14402F;
-    --color-saffron-500: #D08A1E;
-    --color-rule: #D6CAA8;
+    --color-paper-200: #F4E6CE;
+    --color-terracotta: #B94F35;
+    --color-mustard: #D99A28;
+    --color-charcoal: #39332E;
   }
 
   body {
-    background-color: #F1E8D0;
-    color: #2B2620;
+    background-color: #F4E6CE;
+    color: #39332E;
     font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     overflow-x: hidden;
   }
 
   /* Keyboard accessible focus rings */
   :focus-visible {
-    outline: 2px solid #14402F;
+    outline: 2px solid #B94F35;
     outline-offset: 2px;
   }
 }
@@ -33,12 +33,49 @@
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #E6DAB9;
+  background: #E8D6A3;
 }
 ::-webkit-scrollbar-thumb {
-  background: #B7C4A0;
+  background: #D8BDA0;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #6B7A3A;
+  background: #B94F35;
+}
+
+/* Print Styles for Bank Passport A4 Output */
+@media print {
+  body {
+    background-color: #FFFFFF !important;
+    color: #0F172A !important;
+  }
+
+  header, nav, aside, .no-print {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  .a4-page {
+    width: 210mm !important;
+    min-height: 297mm !important;
+    padding: 18mm 20mm !important;
+    margin: 0 auto !important;
+    background: #FFFFFF !important;
+    box-shadow: none !important;
+    border: none !important;
+    page-break-after: always !important;
+    page-break-inside: avoid !important;
+  }
+
+  .a4-page:last-child {
+    page-break-after: auto !important;
+  }
+
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
 }

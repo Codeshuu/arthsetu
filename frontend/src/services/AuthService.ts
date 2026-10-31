@@ -1,9 +1,11 @@
 // AuthService interface & Local implementation
-// Backed by Zustand state / local storage
-// NOTE: In a future cloud-backed architecture, a RemoteAuthService implementing
-// this interface would call POST /api/auth/login, /api/auth/otp, etc.
+// Backed by Zustand multi-user state and local storage
+
+import { useArthSetuStore } from '../store/useArthSetuStore';
+import { UserAccount } from './types';
 
 export interface UserSession {
+  userId?: string;
   phoneNumber?: string;
   email?: string;
   name: string;
@@ -12,65 +14,81 @@ export interface UserSession {
 }
 
 export interface IAuthService {
-  getCurrentSession(): Promise<UserSession>;
-  loginWithPhone(phone: string, otp: string): Promise<UserSession>;
+  getCurrentSession(): Promise<UserSession | null>;
+  loginWithPhone(phone: string, otpOrPass: string): Promise<UserSession>;
   loginWithEmail(email: string, pass: string): Promise<UserSession>;
-  loginAsDemo(businessId: string): Promise<UserSession>;
+  loginAsDemo(businessIdOrUserId: string): Promise<UserSession>;
   logout(): Promise<void>;
 }
 
 class LocalAuthService implements IAuthService {
-  private STORAGE_KEY = 'arthsetu_session';
+  async getCurrentSession(): Promise<UserSession | null> {
+    const user = useArthSetuStore.getState().currentUser;
+    if (!user) return null;
+    return {
+      userId: user.id,
+      name: user.name,
+      email: user.email,
+      phoneNumber: user.phone,
+      isAuthenticated: true,
+      isDemo: user.id.startsWith('usr_ramesh') || user.id.startsWith('usr_priya') || user.id.startsWith('usr_sunita'),
+    };
+  }
 
-  async getCurrentSession(): Promise<UserSession> {
-    const raw = localStorage.getItem(this.STORAGE_KEY);
-    if (!raw) {
-      return { name: 'Ramesh Patel', isAuthenticated: true, isDemo: true };
+  async loginWithPhone(phone: string, otpOrPass: string): Promise<UserSession> {
+    const res = useArthSetuStore.getState().login(phone, otpOrPass);
+    if (!res.success) {
+      throw new Error(res.error || 'Authentication failed');
     }
-    try {
-      return JSON.parse(raw);
-    } catch {
-      return { name: 'Ramesh Patel', isAuthenticated: true, isDemo: true };
+    const user = useArthSetuStore.getState().currentUser!;
+    return {
+      userId: user.id,
+      name: user.name,
+      email: user.email,
+      phoneNumber: user.phone,
+      isAuthenticated: true,
+      isDemo: false,
+    };
+  }
+
+  async loginWithEmail(email: string, pass: string): Promise<UserSession> {
+    const res = useArthSetuStore.getState().login(email, pass);
+    if (!res.success) {
+      throw new Error(res.error || 'Authentication failed');
     }
+    const user = useArthSetuStore.getState().currentUser!;
+    return {
+      userId: user.id,
+      name: user.name,
+      email: user.email,
+      phoneNumber: user.phone,
+      isAuthenticated: true,
+      isDemo: false,
+    };
   }
 
-  async loginWithPhone(phone: string, _otp: string): Promise<UserSession> {
-    // Simulated authentication for demo. Accepts any 6-digit OTP.
-    const session: UserSession = {
-      phoneNumber: phone,
-      name: 'Business Owner',
+  async loginAsDemo(businessIdOrUserId: string): Promise<UserSession> {
+    // If passed a userId, use directly, else map businessId
+    let targetUserId = businessIdOrUserId;
+    if (businessIdOrUserId.includes('lakshmi')) targetUserId = 'usr_ramesh';
+    else if (businessIdOrUserId.includes('rangoli')) targetUserId = 'usr_priya';
+    else if (businessIdOrUserId.includes('sunita')) targetUserId = 'usr_sunita';
+
+    useArthSetuStore.getState().loginAsDemoUser(targetUserId);
+    const user = useArthSetuStore.getState().currentUser!;
+    return {
+      userId: user.id,
+      name: user.name,
+      email: user.email,
+      phoneNumber: user.phone,
       isAuthenticated: true,
       isDemo: true,
     };
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(session));
-    return session;
-  }
-
-  async loginWithEmail(email: string, _pass: string): Promise<UserSession> {
-    const session: UserSession = {
-      email,
-      name: 'Business Owner',
-      isAuthenticated: true,
-      isDemo: true,
-    };
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(session));
-    return session;
-  }
-
-  async loginAsDemo(_businessId: string): Promise<UserSession> {
-    const session: UserSession = {
-      name: 'Ramesh Patel (Demo)',
-      isAuthenticated: true,
-      isDemo: true,
-    };
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(session));
-    return session;
   }
 
   async logout(): Promise<void> {
-    localStorage.removeItem(this.STORAGE_KEY);
+    useArthSetuStore.getState().logout();
   }
 }
 
 export const authService: IAuthService = new LocalAuthService();
-

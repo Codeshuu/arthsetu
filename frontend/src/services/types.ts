@@ -11,6 +11,16 @@ export type BusinessCategory =
 
 export type OwnershipType = 'sole_proprietorship' | 'family_run' | 'partnership';
 
+export interface UserAccount {
+  id: string; // e.g. 'usr_ramesh', 'usr_priya', 'usr_sunita', or 'usr_...'
+  name: string;
+  email: string;
+  phone: string;
+  password?: string;
+  businessIds: string[];
+  createdAt: string;
+}
+
 export interface LocationInfo {
   city: string;
   state: string;
@@ -20,6 +30,7 @@ export interface LocationInfo {
 
 export interface Business {
   id: string;
+  ownerId?: string;
   name: string;
   category: BusinessCategory;
   ownership: OwnershipType;
@@ -67,6 +78,8 @@ export interface TransactionEvidence {
 
 export interface Transaction {
   id: string;
+  businessId?: string;
+  ownerId?: string;
   date: string; // ISO date 'YYYY-MM-DD'
   amount: number;
   direction: Direction;
@@ -91,6 +104,8 @@ export type SourceType =
 
 export interface Source {
   id: string;
+  businessId?: string;
+  ownerId?: string;
   type: SourceType;
   fileName?: string;
   fileUrl?: string; // in-memory blob or data URL
@@ -102,6 +117,8 @@ export interface Source {
 
 export interface DiaryDay {
   date: string; // 'YYYY-MM-DD'
+  businessId?: string;
+  ownerId?: string;
   cashSales: number;
   upiSales: number;
   isOpen: boolean;
@@ -117,6 +134,8 @@ export interface UdhaarSettlement {
 
 export interface Udhaar {
   id: string;
+  businessId?: string;
+  ownerId?: string;
   customerLabel: string; // Anonymous nickname (e.g., 'Ramesh Bhai (Milkman)')
   amount: number;
   givenOn: string;
@@ -134,6 +153,8 @@ export type ObservationType =
 
 export interface Observation {
   id: string;
+  businessId?: string;
+  ownerId?: string;
   type: ObservationType;
   severity: 'info' | 'attention';
   titleEn: string;
@@ -154,6 +175,8 @@ export interface Observation {
 
 export interface ShareGrant {
   token: string;
+  businessId?: string;
+  ownerId?: string;
   sections: string[];
   expiresAt: string;
   createdAt: string;
@@ -174,4 +197,3 @@ export interface DimensionMetric {
   improvementEn: string;
   improvementHi: string;
 }
-

@@ -7,6 +7,7 @@ import { createRng, seededBetween } from './seededRng';
 
 export const businessC: Business = {
   id: BUSINESS_IDS.C_SUNITA_VARIETY,
+  ownerId: 'usr_sunita',
   name: 'Sunita Variety Store',
   category: 'general_retail',
   ownership: 'family_run',
