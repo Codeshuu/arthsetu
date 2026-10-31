@@ -3,6 +3,7 @@ import { useArthSetuStore } from '../../store/useArthSetuStore';
 import { useI18n } from '../../i18n/i18nContext';
 import {
   selectMonthlyTrends,
+  selectDailyTrends,
   selectExpenseBreakdown,
   selectRecordedSales,
   selectRecordedSpending,
@@ -31,6 +32,7 @@ export const AnalyticsPage: React.FC = () => {
 
   const [colorByEvidence, setColorByEvidence] = useState(false);
   const [periodPreset, setPeriodPreset] = useState<'3m' | '6m' | 'all'>('all');
+  const [viewGranularity, setViewGranularity] = useState<'daily' | 'monthly'>('daily');
 
   const allMonthlyTrends = selectMonthlyTrends(transactions);
   const monthlyTrends =
@@ -39,6 +41,17 @@ export const AnalyticsPage: React.FC = () => {
       : periodPreset === '6m'
       ? allMonthlyTrends.slice(-6)
       : allMonthlyTrends;
+
+  const allDailyTrends = selectDailyTrends(transactions);
+  const dailyTrends =
+    periodPreset === '3m'
+      ? allDailyTrends.slice(-90)
+      : periodPreset === '6m'
+      ? allDailyTrends.slice(-180)
+      : allDailyTrends;
+
+  const chartData = viewGranularity === 'daily' ? dailyTrends : monthlyTrends;
+  const xDataKey = viewGranularity === 'daily' ? 'dateLabel' : 'monthLabel';
 
   const expenseBreakdown = selectExpenseBreakdown(transactions);
   const totalSales = selectRecordedSales(transactions);
@@ -75,6 +88,30 @@ export const AnalyticsPage: React.FC = () => {
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
+          {/* Granularity Toggle: Daily vs Monthly */}
+          <div className="flex items-center rounded bg-[#F8F1DE] border border-[#D6CAA8] p-0.5 text-xs font-mono">
+            <button
+              onClick={() => setViewGranularity('daily')}
+              className={`px-3 py-1 rounded transition-colors font-bold ${
+                viewGranularity === 'daily'
+                  ? 'bg-[#14402F] text-white shadow-xs'
+                  : 'text-[#7C766B] hover:text-[#2B2620]'
+              }`}
+            >
+              📅 Daily View
+            </button>
+            <button
+              onClick={() => setViewGranularity('monthly')}
+              className={`px-3 py-1 rounded transition-colors font-bold ${
+                viewGranularity === 'monthly'
+                  ? 'bg-[#14402F] text-white shadow-xs'
+                  : 'text-[#7C766B] hover:text-[#2B2620]'
+              }`}
+            >
+              📊 Monthly View
+            </button>
+          </div>
+
           {/* Preset Buttons */}
           <div className="flex items-center rounded bg-[#F8F1DE] border border-[#D6CAA8] p-0.5 text-xs font-mono">
             {[
@@ -133,9 +170,9 @@ export const AnalyticsPage: React.FC = () => {
 
         <div className="h-72 w-full">
           <ResponsiveContainer width="100%" height="100%">
-            <ComposedChart data={monthlyTrends}>
+            <ComposedChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#E6DAB9" opacity={0.6} />
-              <XAxis dataKey="monthLabel" stroke="#7C766B" fontSize={11} tickLine={false} />
+              <XAxis dataKey={xDataKey} stroke="#7C766B" fontSize={11} tickLine={false} />
               <YAxis
                 stroke="#7C766B"
                 fontSize={11}
@@ -187,9 +224,9 @@ export const AnalyticsPage: React.FC = () => {
 
           <div className="h-56 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={monthlyTrends}>
+              <BarChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#E6DAB9" opacity={0.5} />
-                <XAxis dataKey="monthLabel" stroke="#7C766B" fontSize={10} tickLine={false} />
+                <XAxis dataKey={xDataKey} stroke="#7C766B" fontSize={10} tickLine={false} />
                 <YAxis
                   stroke="#7C766B"
                   fontSize={10}
@@ -284,7 +321,7 @@ export const AnalyticsPage: React.FC = () => {
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={allMonthlyTrends}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#E6DAB9" opacity={0.5} />
-                  <XAxis dataKey="monthLabel" stroke="#7C766B" fontSize={11} tickLine={false} />
+                  <XAxis dataKey={xDataKey} stroke="#7C766B" fontSize={11} tickLine={false} />
                   <YAxis
                     stroke="#7C766B"
                     fontSize={11}

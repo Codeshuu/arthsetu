@@ -13,6 +13,7 @@ import {
   selectSalesCashDigitalSplit,
   selectOperatingContinuity,
   selectMonthlyTrends,
+  selectDailyTrends,
 } from '../../selectors/financeSelectors';
 import { selectEvidenceBreakdown } from '../../selectors/evidenceSelectors';
 import { selectFourDimensions } from '../../selectors/dimensionSelectors';
@@ -53,6 +54,10 @@ export const DashboardPage: React.FC = () => {
   const dimensions = selectFourDimensions(business, transactions, diaryDays);
   const activeObs = selectActiveObservations(observations);
   const monthlyTrends = selectMonthlyTrends(transactions);
+  const dailyTrends = selectDailyTrends(transactions);
+  // Show daily trend if data is within 1-2 months so user sees each day's activity
+  const trendData = monthlyTrends.length <= 2 && dailyTrends.length > 0 ? dailyTrends : monthlyTrends;
+  const trendXKey = monthlyTrends.length <= 2 && dailyTrends.length > 0 ? 'dateLabel' : 'monthLabel';
 
   // Prioritized Next Actions Queue
   const nextActions = [
@@ -198,9 +203,9 @@ export const DashboardPage: React.FC = () => {
 
               <div className="h-44 w-full">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={monthlyTrends}>
+                  <LineChart data={trendData}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#D8BDA0" opacity={0.6} />
-                    <XAxis dataKey="monthLabel" stroke="#76513B" fontSize={10} tickLine={false} />
+                    <XAxis dataKey={trendXKey} stroke="#76513B" fontSize={10} tickLine={false} />
                     <YAxis
                       stroke="#76513B"
                       fontSize={10}

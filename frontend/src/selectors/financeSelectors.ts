@@ -4,7 +4,17 @@ import { Business, DiaryDay, Transaction } from '../services/types';
 
 export interface MonthSummary {
   monthKey: string; // 'YYYY-MM'
-  monthLabel: string; // 'Nov 2025'
+  monthLabel: string; // 'Oct 2026'
+  sales: number;
+  cashSales: number;
+  digitalSales: number;
+  spending: number;
+  netCashMovement: number;
+}
+
+export interface DaySummary {
+  dateKey: string; // 'YYYY-MM-DD'
+  dateLabel: string; // '12 Oct'
   sales: number;
   cashSales: number;
   digitalSales: number;
@@ -60,7 +70,7 @@ export function selectMonthlyTrends(transactions: Transaction[]): MonthSummary[]
       const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
       monthMap.set(monthKey, {
         monthKey,
-        monthLabel: `${months[d.getMonth()]} ${d.getFullYear().toString().slice(-2)}`,
+        monthLabel: `${months[d.getMonth()]} ${d.getFullYear()}`,
         sales: 0,
         cashSales: 0,
         digitalSales: 0,
@@ -70,7 +80,7 @@ export function selectMonthlyTrends(transactions: Transaction[]): MonthSummary[]
     }
 
     const m = monthMap.get(monthKey)!;
-    if (t.category === 'business_income') {
+    if (t.category === 'business_income' || (t.direction === 'in' && t.category !== 'personal_transfer')) {
       m.sales += t.amount;
       if (t.channel === 'cash') {
         m.cashSales += t.amount;
@@ -91,6 +101,56 @@ export function selectMonthlyTrends(transactions: Transaction[]): MonthSummary[]
   });
 
   return sortedMonths;
+}
+
+
+export function selectDailyTrends(transactions: Transaction[]): DaySummary[] {
+  const dayMap = new Map<string, DaySummary>();
+
+  transactions.forEach((t) => {
+    const rawDate = t.date ? t.date.substring(0, 10) : '';
+    if (!rawDate || rawDate.length < 10) return;
+
+    if (!dayMap.has(rawDate)) {
+      const parts = rawDate.split('-');
+      const year = parseInt(parts[0], 10);
+      const month = parseInt(parts[1], 10) - 1;
+      const day = parseInt(parts[2], 10);
+      const d = new Date(year, month, day);
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      dayMap.set(rawDate, {
+        dateKey: rawDate,
+        dateLabel: `${day} ${months[month]}`,
+        sales: 0,
+        cashSales: 0,
+        digitalSales: 0,
+        spending: 0,
+        netCashMovement: 0,
+      });
+    }
+
+    const dayEntry = dayMap.get(rawDate)!;
+    if (t.category === 'business_income' || (t.direction === 'in' && t.category !== 'personal_transfer')) {
+      dayEntry.sales += t.amount;
+      if (t.channel === 'cash') {
+        dayEntry.cashSales += t.amount;
+      } else {
+        dayEntry.digitalSales += t.amount;
+      }
+    } else if (t.direction === 'out' && t.category !== 'personal_transfer') {
+      dayEntry.spending += t.amount;
+    }
+  });
+
+  const sortedDays = Array.from(dayMap.values()).sort((a, b) =>
+    a.dateKey.localeCompare(b.dateKey)
+  );
+
+  sortedDays.forEach((d) => {
+    d.netCashMovement = d.sales - d.spending;
+  });
+
+  return sortedDays;
 }
 
 export function selectExpenseBreakdown(transactions: Transaction[]): Array<{
