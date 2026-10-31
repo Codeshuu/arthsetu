@@ -23,7 +23,7 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24  # 24 hours
 
     # Database Configuration
-    DATABASE_URL: str = "postgresql://postgres:postgres@localhost:5432/arthsetu"
+    DATABASE_URL: str = "postgresql+psycopg2://postgres:postgres@localhost:5432/arthsetu"
     TEST_DATABASE_URL: str = "sqlite:///./test_arthsetu.db"
 
     # CORS Configuration
