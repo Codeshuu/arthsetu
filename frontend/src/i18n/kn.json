@@ -1,18 +1,22 @@
 {
   "nav": {
-    "home": "ಮುಖಪುಟ",
-    "diary": "ದಿನವಹಿ ಖಾತೆ (ಡೈರಿ)",
-    "records": "ವಹಿವಾಟು ದಾಖಲೆಗಳು",
-    "analytics": "ಹಣಕಾಸು ವಿಶ್ಲೇಷಣೆ",
-    "evidence": "ದಾಖಲೆ ಪ್ರಮಾಣ ಕೇಂದ್ರ",
-    "passport": "ಗೋಚರತೆ ಪಾಸ್‌ಪೋರ್ಟ್",
-    "ask": "ಅರ್ಥಸೇತು ಸಹಾಯ",
+    "home": "ಅವಲೋಕನ (Overview)",
+    "records": "ವಹಿವಾಟುಗಳು (Transactions)",
+    "analytics": "ವಿಶ್ಲೇಷಣೆ ಮತ್ತು ಗುಣಮಟ್ಟ",
+    "evidence": "ಸಾಕ್ಷ್ಯ ಗುಣಮಟ್ಟ (Evidence)",
+    "passport": "ಹಣಕಾಸು ಪಾಸ್‌ಪೋರ್ಟ್",
     "profile": "ವ್ಯಾಪಾರ ಪ್ರೊಫೈಲ್",
     "sharePassport": "ಪಾಸ್‌ಪೋರ್ಟ್ ಹಂಚಿಕೊಳ್ಳಿ",
     "demoData": "ಡೆಮೊ ಮಾಹಿತಿ",
     "business": "ವ್ಯಾಪಾರ",
     "reset": "ಮರುಹೊಂದಿಸಿ",
-    "tour": "ಮಾರ್ಗದರ್ಶಿ"
+    "tour": "ಮಾರ್ಗದರ್ಶಿ",
+    "overview": "ಅವಲೋಕನ (Overview)",
+    "transactions": "ವಹಿವಾಟುಗಳು (Transactions)",
+    "import": "ದಾಖಲೆಗಳ ಆಮದು (Import)",
+    "reconciliation": "ಹೊಂದಾಣಿಕೆ (Reconciliation)",
+    "insights": "ವಿಶ್ಲೇಷಣೆ ಮತ್ತು ಗುಣಮಟ್ಟ",
+    "settings": "ಸೆಟ್ಟಿಂಗ್‌ಗಳು ಮತ್ತು ಗೌಪ್ಯತೆ"
   },
   "common": {
     "save": "ಉಳಿಸಿ",

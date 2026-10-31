@@ -1,7 +1,6 @@
 import React, { lazy, Suspense } from 'react';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { OwnerShell } from './layouts/OwnerShell';
-import { InstitutionShell } from './layouts/InstitutionShell';
 import { PublicShell } from './layouts/PublicShell';
 
 // Lazy loaded routes
@@ -16,12 +15,6 @@ const OnboardingWizard = lazy(() =>
 );
 const DashboardPage = lazy(() =>
   import('../features/dashboard/DashboardPage').then((m) => ({ default: m.DashboardPage }))
-);
-const DiaryPage = lazy(() =>
-  import('../features/diary/DiaryPage').then((m) => ({ default: m.DiaryPage }))
-);
-const UdhaarLedgerPage = lazy(() =>
-  import('../features/diary/UdhaarLedgerPage').then((m) => ({ default: m.UdhaarLedgerPage }))
 );
 const RecordsPage = lazy(() =>
   import('../features/records/RecordsPage').then((m) => ({ default: m.RecordsPage }))
@@ -48,19 +41,8 @@ const PassportPage = lazy(() =>
 const SharePassportPage = lazy(() =>
   import('../features/passport/SharePassportPage').then((m) => ({ default: m.SharePassportPage }))
 );
-const AssistantPage = lazy(() =>
-  import('../features/assistant/AssistantPage').then((m) => ({ default: m.AssistantPage }))
-);
 const ProfilePage = lazy(() =>
   import('../features/profile/ProfilePage').then((m) => ({ default: m.ProfilePage }))
-);
-const InstitutionViewPage = lazy(() =>
-  import('../features/institution/InstitutionViewPage').then((m) => ({
-    default: m.InstitutionViewPage,
-  }))
-);
-const CreditsPage = lazy(() =>
-  import('../features/credits/CreditsPage').then((m) => ({ default: m.CreditsPage }))
 );
 const NotFoundPage = lazy(() =>
   import('../features/credits/NotFoundPage').then((m) => ({ default: m.NotFoundPage }))
@@ -142,15 +124,7 @@ export const router = createBrowserRouter([
           </Suspense>
         ),
       },
-      {
-        path: 'credits',
-        element: (
-          <Suspense fallback={<PageLoadingFallback />}>
-            <CreditsPage />
-          </Suspense>
-        ),
-      },
-    ],
+      ],
   },
 
   // Owner App routes (/app/*)
@@ -163,22 +137,6 @@ export const router = createBrowserRouter([
         element: (
           <Suspense fallback={<PageLoadingFallback />}>
             <DashboardPage />
-          </Suspense>
-        ),
-      },
-      {
-        path: 'diary',
-        element: (
-          <Suspense fallback={<PageLoadingFallback />}>
-            <DiaryPage />
-          </Suspense>
-        ),
-      },
-      {
-        path: 'diary/udhaar',
-        element: (
-          <Suspense fallback={<PageLoadingFallback />}>
-            <UdhaarLedgerPage />
           </Suspense>
         ),
       },
@@ -239,14 +197,6 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: 'ask',
-        element: (
-          <Suspense fallback={<PageLoadingFallback />}>
-            <AssistantPage />
-          </Suspense>
-        ),
-      },
-      {
         path: 'profile',
         element: (
           <Suspense fallback={<PageLoadingFallback />}>
@@ -257,25 +207,7 @@ export const router = createBrowserRouter([
     ],
   },
 
-  // Institutional Shared View routes (/institution/*)
-  {
-    path: '/institution',
-    element: <InstitutionShell />,
-    children: [
-      {
-        path: ':token',
-        element: (
-          <Suspense fallback={<PageLoadingFallback />}>
-            <InstitutionViewPage />
-          </Suspense>
-        ),
-      },
-      {
-        index: true,
-        element: <Navigate to="/institution/demo" replace />,
-      },
-    ],
-  },
+
 
   // 404
   {

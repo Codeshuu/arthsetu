@@ -1,18 +1,22 @@
 {
   "nav": {
-    "home": "Home",
-    "diary": "Financial Diary",
-    "records": "Records",
-    "analytics": "Analytics",
-    "evidence": "Evidence Centre",
-    "passport": "Passport",
-    "ask": "Ask ArthSetu",
-    "profile": "Profile",
+    "home": "Overview",
+    "records": "Transactions",
+    "analytics": "Insights & Data Quality",
+    "evidence": "Evidence Quality",
+    "passport": "Financial Passport",
+    "profile": "Business Profile",
     "sharePassport": "Share Passport",
     "demoData": "DEMONSTRATION DATA",
     "business": "Business",
     "reset": "Reset",
-    "tour": "Tour"
+    "tour": "Tour",
+    "overview": "Overview",
+    "transactions": "Transactions",
+    "import": "Import Records",
+    "reconciliation": "Reconciliation",
+    "insights": "Insights & Data Quality",
+    "settings": "Settings & Privacy"
   },
   "common": {
     "save": "Save",

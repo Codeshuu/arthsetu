@@ -1099,10 +1099,10 @@ export const LandingPage: React.FC = () => {
               <div className="font-mono font-bold text-[#D08A1E] uppercase tracking-wider mb-3">Quick Links</div>
               {[
                 { to: '/app', label: 'Dashboard' },
-                { to: '/app/diary', label: 'Financial Diary' },
+                { to: '/app/records', label: 'Transactions' },
                 { to: '/app/passport', label: 'Visibility Passport' },
                 { to: '/institution/demo', label: 'Institution View' },
-                { to: '/credits', label: 'Asset Credits' },
+                
               ].map((link) => (
                 <div key={link.to}>
                   <Link to={link.to} className="hover:text-[#FDFBF4] transition-colors">

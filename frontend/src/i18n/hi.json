@@ -1,18 +1,22 @@
 {
   "nav": {
-    "home": "होम",
-    "diary": "वित्तीय डायरी (खाता)",
-    "records": "लेनदेन रजिस्टर",
-    "analytics": "वित्तीय रुझान",
-    "evidence": "प्रमाण केंद्र",
+    "home": "अवलोकन (Overview)",
+    "records": "लेनदेन (Transactions)",
+    "analytics": "वित्तीय रुझान व गुणवत्ता",
+    "evidence": "प्रमाण गुणवत्ता (Evidence)",
     "passport": "विजिबिलिटी पासपोर्ट",
-    "ask": "अर्थसेतु से पूछें",
     "profile": "व्यापार प्रोफ़ाइल",
     "sharePassport": "पासपोर्ट साझा करें",
     "demoData": "डेमो डेटा",
     "business": "व्यापार",
     "reset": "रीसेट",
-    "tour": "टूर"
+    "tour": "टूर",
+    "overview": "अवलोकन (Overview)",
+    "transactions": "लेनदेन (Transactions)",
+    "import": "रिकॉर्ड आयात (Import)",
+    "reconciliation": "समाधान (Reconciliation)",
+    "insights": "वित्तीय रुझान व गुणवत्ता",
+    "settings": "सेटिंग्स व गोपनीयता"
   },
   "common": {
     "save": "सहेजें",

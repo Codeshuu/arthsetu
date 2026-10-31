@@ -88,7 +88,7 @@ export const ObservationCard: React.FC<ObservationCardProps> = ({
           {!observation.resolved && (
             <div className="mt-3 pt-2 border-t border-[#D6CAA8]/50 flex flex-wrap items-center justify-between gap-2 text-xs">
               <Link
-                to={observation.type === 'missing_record' ? '/app/diary' : '/app/records/review'}
+                to={observation.type === 'missing_record' ? '/app/records' : '/app/records/review'}
                 className="inline-flex items-center space-x-1 font-bold text-[#14402F] hover:text-[#D08A1E]"
               >
                 <span>{actionText}</span>

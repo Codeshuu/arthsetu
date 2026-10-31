@@ -67,7 +67,7 @@ export const DashboardPage: React.FC = () => {
       title: t('dashboard.action2Title', 'Record today’s cash & UPI sales'),
       detail: t('dashboard.action2Desc', 'Keep your 92% operating continuity record intact'),
       time: '1 min',
-      link: '/app/diary',
+      link: '/app/records',
       icon: Calendar,
     },
     {

@@ -8,12 +8,12 @@ import { StoryRail, StoryBeat } from '../../components/fragments/StoryRail';
 import { GuidedTour } from '../../features/tour/GuidedTour';
 import {
   Home,
-  BookOpen,
   Receipt,
+  UploadCloud,
+  CheckCircle2,
   BarChart3,
   ShieldCheck,
   FileText,
-  MessageSquare,
   User,
   Share2,
   PlusCircle,
@@ -42,14 +42,14 @@ export const OwnerShell: React.FC = () => {
   const currentBeat = getBeatForRoute();
 
   const navItems = [
-    { label: t('nav.home'), path: '/app', icon: Home, beat: 2 },
-    { label: t('nav.diary'), path: '/app/diary', icon: BookOpen, beat: 2 },
-    { label: t('nav.records'), path: '/app/records', icon: Receipt, beat: 3 },
-    { label: t('nav.analytics'), path: '/app/analytics', icon: BarChart3, beat: 4 },
-    { label: t('nav.evidence'), path: '/app/evidence', icon: ShieldCheck, beat: 3 },
-    { label: t('nav.passport'), path: '/app/passport', icon: FileText, beat: 5 },
-    { label: t('nav.ask'), path: '/app/ask', icon: MessageSquare, beat: 4 },
-    { label: t('nav.profile'), path: '/app/profile', icon: User, beat: 2 },
+    { label: t('nav.overview', 'Overview'), path: '/app', icon: Home, beat: 2 },
+    { label: t('nav.transactions', 'Transactions'), path: '/app/records', icon: Receipt, beat: 3 },
+    { label: t('nav.import', 'Import Records'), path: '/app/records/import', icon: UploadCloud, beat: 3 },
+    { label: t('nav.reconciliation', 'Reconciliation'), path: '/app/records/review', icon: CheckCircle2, beat: 3 },
+    { label: t('nav.insights', 'Insights & Data Quality'), path: '/app/analytics', icon: BarChart3, beat: 4 },
+    { label: t('nav.evidence', 'Evidence Quality'), path: '/app/evidence', icon: ShieldCheck, beat: 3 },
+    { label: t('nav.passport', 'Financial Passport'), path: '/app/passport', icon: FileText, beat: 5 },
+    { label: t('nav.profile', 'Business Profile'), path: '/app/profile', icon: User, beat: 2 },
   ];
 
   return (
@@ -170,14 +170,14 @@ export const OwnerShell: React.FC = () => {
           {/* Quick Diary CTA */}
           <div className="p-3 border-t border-[#D6CAA8] space-y-2">
             <Link
-              to="/app/diary"
+              to="/app/records"
               className="flex items-center justify-center space-x-2 w-full py-2.5 px-3 rounded-xl bg-[#14402F] text-[#FDFBF4] text-xs font-bold hover:bg-[#0F2E22] transition-colors shadow-sm"
             >
               <PlusCircle className="w-4 h-4 text-[#D08A1E]" />
-              <span>+ Record Today's Sale</span>
+              <span>+ Record Transaction</span>
             </Link>
             <div className="text-[9px] text-center font-mono text-[#B7C4A0]">
-              ArthSetu v1.0 · Offline Ledger
+              ArthSetu v1.0 · Private Workspace
             </div>
           </div>
         </aside>
@@ -249,7 +249,7 @@ export const OwnerShell: React.FC = () => {
 
         {/* Raised center '+' Diary button */}
         <Link
-          to="/app/diary"
+          to="/app/records"
           className="flex flex-col items-center -mt-5 bg-[#14402F] text-[#FDFBF4] rounded-full p-2.5 shadow-lg border-2 border-[#D08A1E] hover:scale-105 transition-transform"
           aria-label="Add Diary Entry"
         >
@@ -269,15 +269,15 @@ export const OwnerShell: React.FC = () => {
         </Link>
 
         <Link
-          to="/app/ask"
+          to="/app/analytics"
           className={`flex flex-col items-center py-1 px-2 text-[10px] font-semibold ${
-            location.pathname.startsWith('/app/ask')
+            location.pathname.startsWith('/app/analytics')
               ? 'text-[#14402F] font-bold'
               : 'text-[#7C766B]'
           }`}
         >
-          <MessageSquare className="w-5 h-5 mb-0.5" />
-          <span>{t('nav.ask')}</span>
+          <BarChart3 className="w-5 h-5 mb-0.5" />
+          <span>{t('nav.insights', 'Insights')}</span>
         </Link>
       </nav>
 

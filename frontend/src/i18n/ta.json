@@ -1,18 +1,22 @@
 {
   "nav": {
-    "home": "முகப்பு",
-    "diary": "நாளேடு (கணக்கு)",
-    "records": "பரிவர்த்தனை ஏடு",
-    "analytics": "நிதிப் போக்குகள்",
-    "evidence": "சான்றாதார மையம்",
-    "passport": "தெளிவு பாஸ்போர்ட்",
-    "ask": "அர்த்தசேது உதவி",
-    "profile": "வணிக சுயவிவரம்",
+    "home": "கண்ணோட்டம் (Overview)",
+    "records": "பரிவர்த்தனைகள் (Transactions)",
+    "analytics": "உள்ளறிவுகள் மற்றும் தரம்",
+    "evidence": "சான்றுகளின் தரம் (Evidence)",
+    "passport": "நிதி பாஸ்போர்ட்",
+    "profile": "வணிக விவரக்குறிப்பு",
     "sharePassport": "பாஸ்போர்ட் பகிர்க",
     "demoData": "டெமோ விவரங்கள்",
     "business": "வணிகம்",
     "reset": "மீட்டமை",
-    "tour": "வழிகாட்டி"
+    "tour": "வழிகாட்டி",
+    "overview": "கண்ணோட்டம் (Overview)",
+    "transactions": "பரிவர்த்தனைகள் (Transactions)",
+    "import": "பதிவேற்றம் (Import)",
+    "reconciliation": "இணக்கம் (Reconciliation)",
+    "insights": "உள்ளறிவுகள் மற்றும் தரம்",
+    "settings": "அமைப்புகள் மற்றும் தனியுரிமை"
   },
   "common": {
     "save": "சேமிக்க",
